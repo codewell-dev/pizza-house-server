@@ -148,26 +148,7 @@ Vladyslav — Full-Stack JS Developer
 React | Next.js | NestJS | MongoDB | TypeScript
 ```
 
-🔗 GitHub: [https://github.com/vladyslav-codewell](https://github.com/vladyslav-codewell)
+🔗 GitHub: [https://github.com/codewell-dev](https://github.com/codewell-dev)
 🧩 Open Source Contributor
 
----
 
-## 📜 License
-
-MIT — Open for learning and improvements.
-
-```
-
----
-
----
-
-### Хочеш — можу ще:
-
-- Згенерувати **markdown badges**
-- Додати **preview фото проєкту**
-- Зробити **emoji філософію FE/BE matching (GitHub aesthetic)**
-
-Хочеш **premium GitHub-style README декор?** 🚀
-```
