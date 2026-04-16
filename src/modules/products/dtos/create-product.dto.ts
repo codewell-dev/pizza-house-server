@@ -6,112 +6,91 @@ import {
   IsNotEmpty,
   IsMongoId,
   ValidateNested,
-  IsBoolean,
+  Min,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
-/**
- * Nested DTO for product variant images
- */
 class ImageDto {
-  @ApiPropertyOptional({ example: '/uploads/products/pizza-large.webp' })
-  @IsString()
-  @IsOptional()
-  large?: string;
-
-  @ApiPropertyOptional({ example: '/uploads/products/pizza-medium.webp' })
-  @IsString()
-  @IsOptional()
-  medium?: string;
-
-  @ApiPropertyOptional({ example: '/uploads/products/pizza-small.webp' })
-  @IsString()
-  @IsOptional()
-  small?: string;
+  @IsString() @IsOptional() large?: string;
+  @IsString() @IsOptional() medium?: string;
+  @IsString() @IsOptional() small?: string;
 }
 
 export class CreateProductDto {
-  @ApiProperty({ example: 450, description: 'Product price in local currency' })
+  @ApiProperty({ example: 450 })
   @IsNumber()
   @IsNotEmpty()
   readonly price: number;
 
-  @ApiPropertyOptional({
-    example: '40 cm',
-    description: 'Size or weight description',
-  })
+  @ApiPropertyOptional({ example: '480' })
   @IsString()
   @IsOptional()
   readonly weight?: string;
 
-  @ApiPropertyOptional({ example: 'g.', description: 'Unit of measurement' })
+  @ApiPropertyOptional({ example: 'г.' })
   @IsString()
   @IsOptional()
   readonly unit?: string;
 
-  @ApiProperty({ example: 'Quattro di Carne', description: 'Variant title' })
+  @ApiProperty({ example: 'Маргарита (35 см)' })
   @IsString()
   @IsNotEmpty()
   readonly title: string;
 
-  @ApiPropertyOptional({
-    example: 'Tomato sauce, mozzarella, bacon, salami, ham...',
-    description: 'Detailed product description',
-  })
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   readonly description?: string;
 
-  @ApiProperty({
-    example: '60c72b2f9b1e8b0015f8a7a1',
-    description: 'Reference to the Category ObjectID',
-  })
+  // category_id — опціональний, бо варіанти піци прив'язуються через GroupedProduct
+  @ApiPropertyOptional({ example: '60c72b2f9b1e8b0015f8a7a1' })
   @IsMongoId()
-  @IsNotEmpty()
-  readonly category_id: string;
+  @IsOptional()
+  readonly category_id?: string;
 
-  @ApiPropertyOptional({ type: ImageDto })
+  @ApiPropertyOptional()
   @ValidateNested()
   @Type(() => ImageDto)
   @IsOptional()
   readonly image?: ImageDto;
 
-  @ApiPropertyOptional({
-    type: [String],
-    description: 'Array of Modifier Group ObjectIDs',
-  })
+  @ApiPropertyOptional({ type: [String] })
   @IsArray()
   @IsMongoId({ each: true })
   @IsOptional()
   readonly group_modifiers?: string[];
 
-  @ApiPropertyOptional({ type: [String], example: ['Spicy', 'Meat'] })
+  @ApiPropertyOptional({ type: [String] })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
   readonly tags?: string[];
 
-  @ApiPropertyOptional({ default: true })
-  @IsBoolean()
-  @IsOptional()
-  readonly is_active?: boolean;
-
+  // is_active: число (1 = активний, 0 = прихований) — як в оригінальному pizzahouse API
   @ApiPropertyOptional({
-    type: [String],
-    description: 'Recommended products for cross-selling',
+    example: 1,
+    description: '1 = активний, 0 = прихований',
   })
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  readonly is_active?: number;
+
+  @ApiPropertyOptional({ type: [String] })
   @IsArray()
   @IsMongoId({ each: true })
   @IsOptional()
   readonly well_together_products?: string[];
 
-  @ApiPropertyOptional({
-    type: [String],
-    description: 'Internal grouping of product IDs',
-  })
+  @ApiPropertyOptional({ type: [String] })
   @IsArray()
   @IsMongoId({ each: true })
   @IsOptional()
   readonly group?: string[];
+
+  @ApiPropertyOptional({ example: 0 })
+  @IsNumber()
+  @IsOptional()
+  readonly order?: number;
 }
